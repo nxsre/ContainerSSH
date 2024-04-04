@@ -1,0 +1,44 @@
+---
+ssh:
+  listen: 0.0.0.0:2222
+  clientAliveInterval: 10s
+  hostkeys:
+  - /etc/ssh/keys/ssh_host_dsa_key
+#  - /etc/ssh/keys/ssh_host_ecdsa_key
+  - /etc/ssh/keys/ssh_host_ed25519_key
+  - /etc/ssh/keys/ssh_host_rsa_key
+security:
+  forwarding:
+    reverseForwardingMode: enable
+    forwardingMode: enable
+    socketForwardingMode: enable
+    socketListenMode: enable
+    x11ForwardingMode: enable
+auth:
+  password:
+    method: passthrough
+    #method: pam
+  publicKey:
+    method: local
+
+backend: sshproxy
+
+log:
+  level: debug
+  destination: file
+  file: /var/log/containerssh.log
+
+health:
+  listen: 127.0.0.1:7002
+
+sshproxy:
+  server: 200.0.0.64
+  port: 2222
+  usernamePassThrough: true
+  passwordPassThrough: true
+  proxyJump:
+    user: proxy
+    password: x(zqG_0g~m*us77_u
+    useInsecureCipher: true
+    server: 172.16.2.89
+    port: 22
